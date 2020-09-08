@@ -20,6 +20,7 @@ export default class Manage extends Component {
       showInputForm: false,
       disableInputID: false,
       showHeaderTable: true,
+      showBtnReset: false,
     };
   }
 
@@ -28,6 +29,7 @@ export default class Manage extends Component {
   };
 
   showInputForm = () => {
+    this.showButtonReset();
     this.clear_Input();
     this.onChangeStatusInputId();
     this.onChangeStatusForm(true);
@@ -35,6 +37,9 @@ export default class Manage extends Component {
 
   onChangeStatusForm = (showInputForm = false) => {
     this.setState({ showInputForm });
+  };
+  showButtonReset = (showBtnReset = false) => {
+    this.setState({ showBtnReset });
   };
 
   hideHeaderTable = (showHeaderTable = true) => {
@@ -108,17 +113,6 @@ export default class Manage extends Component {
     return validate;
   };
 
-  // handleDataSubmit = (obj) => {
-  //   if (!this.checkValidateId(obj)) {
-  //     return;
-  //   } else {
-  //     this.setState({
-  //       ArrayProduct: [...this.state.ArrayProduct, obj],
-  //     });
-  //     this.onChangeStatusForm();
-  //   }
-  // };
-
   handleDataSubmit = (obj) => {
     let { index } = this;
     let { ArrayProduct, ArrayTemporary, keyWord, disableInputID } = this.state;
@@ -149,6 +143,7 @@ export default class Manage extends Component {
 
   showFormEdit = (index) => {
     let { ArrayProduct, ArrayTemporary } = this.state;
+    this.showButtonReset();
     this.showInputForm();
     this.onChangeStatusInputId(true);
     if (ArrayTemporary.length === 0) {
@@ -197,6 +192,7 @@ export default class Manage extends Component {
             <FormInput
               onSubmitData={this.handleDataSubmit}
               initialValues={Properties}
+              showBtnReset={() => this.showButtonReset()}
               hideInputForm={() => this.onChangeStatusForm()}
               disableInputID={disableInputID}
             />

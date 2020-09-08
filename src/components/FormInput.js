@@ -3,7 +3,12 @@ import { Form, Field } from "react-final-form";
 import Styles from "./Styles";
 export default class FormInput extends Component {
   render() {
-    const { hideInputForm, onSubmitData, disableInputID } = this.props;
+    const {
+      hideInputForm,
+      onSubmitData,
+      disableInputID,
+      showBtnReset,
+    } = this.props;
 
     const onSubmit = (obj) => {
       onSubmitData(obj);
@@ -113,13 +118,15 @@ export default class FormInput extends Component {
                       <button type="submit" disabled={submitting}>
                         Submit
                       </button>
-                      <button
-                        type="button"
-                        onClick={form.reset}
-                        disabled={submitting || pristine}
-                      >
-                        Reset
-                      </button>
+                      {showBtnReset && (
+                        <button
+                          type="button"
+                          onClick={form.reset}
+                          disabled={submitting || pristine}
+                        >
+                          Reset
+                        </button>
+                      )}
                     </div>
                   </form>
                 )}
