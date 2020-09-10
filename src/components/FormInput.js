@@ -7,7 +7,6 @@ export default class FormInput extends Component {
       hideInputForm,
       onSubmitData,
       disableInputID,
-      showBtnReset,
     } = this.props;
 
     const onSubmit = (obj) => {
@@ -118,7 +117,6 @@ export default class FormInput extends Component {
                       <button type="submit" disabled={submitting}>
                         Submit
                       </button>
-                      {showBtnReset && (
                         <button
                           type="button"
                           onClick={form.reset}
@@ -126,7 +124,6 @@ export default class FormInput extends Component {
                         >
                           Reset
                         </button>
-                      )}
                     </div>
                   </form>
                 )}

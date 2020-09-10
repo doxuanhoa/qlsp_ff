@@ -69,5 +69,12 @@ const Database = [
     price: "25000",
     country: "Korea",
   },
+  {
+    id: "ID011",
+    name: "Samsung Galaxy Note9",
+    manufacturer: "Samsung",
+    price: "17000",
+    country: "S.Korea",
+  },
 ];
 export default Database;

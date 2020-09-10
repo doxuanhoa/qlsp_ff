@@ -1,52 +1,78 @@
 import React, { Component } from "react";
+import "rsuite/lib/styles/index.less";
+import 'rsuite/dist/styles/rsuite-default.css'
+import { Icon, Loader, Table, } from "rsuite";
+import { Button, IconButton, ButtonGroup, ButtonToolbar } from 'rsuite';
+//import fakeData from "https://github.com/rsuite/rsuite/blob/master/docs/public/data/users.json"
+const { Column, HeaderCell, Cell} = Table;
+
+const styles ={
+  btn:{
+    backgroundColor: 'red',
+    color: "#fff"
+  },
+  table: {
+    width: '710px',
+    backgroundColor: 'red',
+  }
+}
 
 class RenderTable extends Component {
-  ShowData = () => {
+  
+  getData() {
     let {
       ArrayProduct = [],
       ArrayTemporary = [],
       keyWord,
+    } = this.props;
+    const listData = (keyWord === "" ? ArrayProduct : ArrayTemporary)
+    return listData;
+  }
+
+  render() {
+    let {
       showFormEdit,
       deleteData,
     } = this.props;
-    let listData = (keyWord === "" ? ArrayProduct : ArrayTemporary).map(
-      (newArray, index) => {
-        return (
-          <tr key={index}>
-            <td>{newArray.id}</td>
-            <td>{newArray.name}</td>
-            <td>{newArray.manufacturer}</td>
-            <td>{newArray.price}</td>
-            <td>{newArray.country}</td>
-            <td>
-              <button onClick={() => showFormEdit(index)}>Edit</button>{" "}
-              <button onClick={() => deleteData(index)}>Delete</button>
-            </td>
-          </tr>
-        );
-      }
-    );
-    return listData;
-  };
-
-  render() {
+    const data = this.getData();
     return (
-      <div>
-        <table id="table" border={1}>
-          {this.props.showHeaderTable && (
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Manufacturer</th>
-                <th>Price</th>
-                <th>Country</th>
-                <th id="action">Action</th>
-              </tr>
-            </thead>
-          )}
-          <tbody id="dataTable">{this.ShowData()}</tbody>
-        </table>
+<div>
+  <Loader/>
+        <Table style={styles.table} data={data} height={400}  >
+          <Column width={70} align="center" >
+            <HeaderCell>Id</HeaderCell>
+            <Cell dataKey="id" />
+          </Column>
+          <Column width={200} >
+            <HeaderCell>Name</HeaderCell>
+            <Cell dataKey="name" />
+          </Column>
+          <Column width={100}>
+            <HeaderCell>Manufacturer</HeaderCell>
+            <Cell dataKey="manufacturer" />
+          </Column>
+          <Column width={100}>
+            <HeaderCell>Country</HeaderCell>
+            <Cell dataKey="country" />
+          </Column>
+          <Column width={50} flexGrow={1}>
+            <HeaderCell>Price</HeaderCell>
+            <Cell dataKey="price" />
+          </Column>
+          <Column width={180} fixed="right">
+            <HeaderCell>Action</HeaderCell>
+            <Cell>
+              {rowIndex => {
+                return (
+                  <span>
+                    <Button style={styles.btn} onClick={() => {showFormEdit(rowIndex.id)}}> <Icon icon='edit' />Edit </Button> {' '}
+                    <Button style={styles.btn} onClick={() => deleteData(rowIndex.id)}><Icon icon='trash' /> Delete </Button>
+                  </span>
+                );
+              }}
+            </Cell>
+          </Column>
+        </Table>
       </div>
     );
   }

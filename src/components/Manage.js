@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Table from "./RenderTable";
 import Database from "./Database";
 import FormInput from "./FormInput";
+import "rsuite/dist/styles/rsuite-default.css";
+import { Button, Icon, Loader, Alert,ButtonToolbar,InputGroup, Input } from "rsuite";
 
 export default class Manage extends Component {
   constructor(props) {
@@ -20,7 +22,6 @@ export default class Manage extends Component {
       showInputForm: false,
       disableInputID: false,
       showHeaderTable: true,
-      showBtnReset: false,
     };
   }
 
@@ -29,8 +30,7 @@ export default class Manage extends Component {
   };
 
   showInputForm = () => {
-    this.showButtonReset();
-    this.clear_Input();
+    this.clearInput();
     this.onChangeStatusInputId();
     this.onChangeStatusForm(true);
   };
@@ -38,29 +38,8 @@ export default class Manage extends Component {
   onChangeStatusForm = (showInputForm = false) => {
     this.setState({ showInputForm });
   };
-  showButtonReset = (showBtnReset = false) => {
-    this.setState({ showBtnReset });
-  };
 
-  hideHeaderTable = (showHeaderTable = true) => {
-    let { ArrayProduct, ArrayTemporary, keyWord } = this.state;
-    if (
-      (ArrayProduct.length !== 0 &&
-        ArrayTemporary.length === 0 &&
-        keyWord !== "") ||
-      ArrayProduct.length === 0
-    ) {
-      this.setState({
-        showHeaderTable,
-      });
-    } else {
-      this.setState({
-        showHeaderTable: true,
-      });
-    }
-  };
-
-  clear_Input = () => {
+  clearInput = () => {
     this.setState({ Properties: {} });
   };
 
@@ -71,24 +50,10 @@ export default class Manage extends Component {
         newArray.id.toUpperCase().includes(e.target.value.toUpperCase())
       );
     });
-    this.setState(
-      {
-        keyWord: e.target.value.toUpperCase(),
-        ArrayTemporary: search,
-      },
-      () => this.hideHeaderTable(false)
-    );
-  };
-
-  onChangeUpdate = (word) => {
-    this.hideHeaderTable(false);
-    let search = this.state.ArrayProduct.filter((newArray) => {
-      return (
-        newArray.name.toUpperCase().includes(word.toUpperCase()) ||
-        newArray.id.toUpperCase().includes(word.toUpperCase())
-      );
+    this.setState({
+      keyWord: e.target.value.toUpperCase(),
+      ArrayTemporary: search,
     });
-    this.setState({ keyWord: word.toUpperCase(), ArrayTemporary: search });
   };
 
   checkValidateId = (ProductAttribute) => {
@@ -108,13 +73,13 @@ export default class Manage extends Component {
       validate = false;
     }
     if (messenger) {
-      alert(messenger);
+      Alert.error(messenger, 1000);
     }
     return validate;
   };
 
   handleDataSubmit = (obj) => {
-    let { index } = this;
+    let {index} = this;
     let { ArrayProduct, ArrayTemporary, keyWord, disableInputID } = this.state;
     if (!disableInputID) {
       if (!this.checkValidateId(obj)) {
@@ -125,9 +90,13 @@ export default class Manage extends Component {
         });
         this.onChangeStatusForm();
       }
+      Alert.success("Success!", 1000);
     } else {
       if (ArrayTemporary.length === 0) {
-        ArrayProduct[index] = obj;
+        let index1 = ArrayProduct.findIndex(
+          (s) => s.id === obj.id
+        );
+        ArrayProduct[index1] = obj;
       } else {
         let index2 = ArrayTemporary.findIndex(
           (s) => s.id === ArrayProduct[index].id
@@ -135,49 +104,59 @@ export default class Manage extends Component {
         ArrayProduct[index] = obj;
         ArrayTemporary[index2] = obj;
       }
+      Alert.success("Success!", 1000);  
       this.setState({ ArrayProduct, ArrayTemporary });
-      this.onChangeUpdate(keyWord);
       this.onChangeStatusForm();
     }
   };
 
-  showFormEdit = (index) => {
+  showFormEdit = (id) => {
     let { ArrayProduct, ArrayTemporary } = this.state;
-    this.showButtonReset();
     this.showInputForm();
     this.onChangeStatusInputId(true);
     if (ArrayTemporary.length === 0) {
-      this.index = index;
+      let index = ArrayProduct.findIndex(
+        (s) => s.id === id
+      );
       this.setState({
         Properties: ArrayProduct[index],
       });
     } else {
       let index2 = ArrayProduct.findIndex(
-        (s) => s.id === ArrayTemporary[index].id
+        (s) => s.id === id
       );
       this.index = index2;
       this.setState({ Properties: ArrayProduct[index2] });
     }
   };
 
-  deleteData = (index) => {
+    deleteData = (id) => {
     let { ArrayProduct, ArrayTemporary } = this.state;
     if (ArrayTemporary.length === 0) {
+      let index = ArrayProduct.findIndex(
+        (s) => s.id === id
+      );
       ArrayProduct.splice(index, 1);
       this.setState({ ArrayProduct });
     } else {
-      let index2 = ArrayProduct.findIndex(
-        (s) => s.id === ArrayTemporary[index].id
+      let index = ArrayProduct.findIndex(
+        (s) => s.id === id
       );
-      ArrayProduct.splice(index2, 1);
-      ArrayTemporary.splice(index, 1);
+      let index2 = ArrayTemporary.findIndex(
+        (s) => s.id === id
+      );
+      ArrayProduct.splice(index, 1);
+      ArrayTemporary.splice(index2, 1);
       this.setState({ ArrayProduct, ArrayTemporary });
     }
-    this.hideHeaderTable(false);
-    alert("Deleted!");
+    Alert.success("Deleted!", 1000);
   };
 
   render() {
+    const styles = {
+      width: 710,
+      marginBottom: 10
+    };
     let {
       ArrayProduct,
       ArrayTemporary,
@@ -192,23 +171,28 @@ export default class Manage extends Component {
             <FormInput
               onSubmitData={this.handleDataSubmit}
               initialValues={Properties}
-              showBtnReset={() => this.showButtonReset()}
               hideInputForm={() => this.onChangeStatusForm()}
               disableInputID={disableInputID}
             />
           )}
-          <h1>PRODUCT MANAGEMENT</h1>
-          <button id="btnAdd" onClick={this.showInputForm}>
-            Add new product
-          </button>
+          <h3>PRODUCT MANAGEMENT</h3>
+          <Button appearance="primary" onClick={this.showInputForm}>Add new product</Button>
           <div className="search">
-            <input
+            {/* <input
+              onChange={this.onChangeSearch}
+              value={keyWord}
+              placeholder="Search by id or name..."
+            /> */}
+
+<InputGroup inside style={styles}>
+      <input
               onChange={this.onChangeSearch}
               value={keyWord}
               placeholder="Search by id or name..."
             />
+    </InputGroup>
           </div>
-          {
+          
             <Table
               ArrayProduct={ArrayProduct}
               ArrayTemporary={ArrayTemporary}
@@ -217,7 +201,6 @@ export default class Manage extends Component {
               deleteData={this.deleteData}
               keyWord={keyWord}
             />
-          }
         </div>
       </div>
     );
