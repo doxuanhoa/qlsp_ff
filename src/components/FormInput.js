@@ -1,21 +1,22 @@
 import React, { Component } from "react";
-import { Form, Field } from "react-final-form";
+import { Form as Final_Form, Field } from "react-final-form";
 import Styles from "./Styles";
+import "rsuite/dist/styles/rsuite-default.css";
+import { Input, ControlLabel, Button, Form, InputGroup, Icon } from "rsuite";
+
 export default class FormInput extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
-    const {
-      hideInputForm,
-      onSubmitData,
-      disableInputID,
-    } = this.props;
-
-    const onSubmit = (obj) => {
+    const { onSubmitData, disableInputID } = this.props;
+    const onSubmit = (obj, form) => {
       onSubmitData(obj);
+      setTimeout(form.restart, 0);
     };
-
-    const required = (value) => (value ? undefined : "Cannot be empty");
-    const mustBeNumber = (value) =>
-      isNaN(value) ? "Must be a number" : undefined;
+    const required = (value) => (value ? undefined : "(*)");
+    const mustBeNumber = (value) => (isNaN(value) ? "(*) Number" : undefined);
     const minValue = (min) => (value) =>
       isNaN(value) || value >= min
         ? undefined
@@ -25,114 +26,122 @@ export default class FormInput extends Component {
         (error, validator) => error || validator(value),
         undefined
       );
+    const styles = {
+      textbox: {
+        width: "200",
+      },
+    };
 
     return (
       <Styles>
-        <div className="myModal" className="modal">
-          <div className="modal-content">
-            <div className="modal-header">
-              <span className="close" onClick={hideInputForm}>
-                ×
-              </span>
-              <h4 id="title">PRODUCT MANAGEMENT</h4>
-            </div>
-            <div className="modal-body">
-              <Form
-                onSubmit={onSubmit}
-                initialValues={this.props.initialValues}
-                render={({ handleSubmit, form, submitting, pristine }) => (
-                  <form onSubmit={handleSubmit}>
-                    <Field name="id" validate={required}>
-                      {({ input, meta }) => (
-                        <div>
-                          <label>ID</label>
-                          <input
-                            {...input}
-                            type="text"
-                            disabled={disableInputID}
-                            placeholder="ID"
-                          />
-                          {meta.error && meta.touched && (
-                            <span>{meta.error}</span>
-                          )}
-                        </div>
-                      )}
-                    </Field>
-                    <Field name="name" validate={required}>
-                      {({ input, meta }) => (
-                        <div>
-                          <label>Name</label>
-                          <input {...input} type="text" placeholder="Name" />
-                          {meta.error && meta.touched && (
-                            <span>{meta.error}</span>
-                          )}
-                        </div>
-                      )}
-                    </Field>
-                    <Field name="manufacturer" validate={required}>
-                      {({ input, meta }) => (
-                        <div>
-                          <label>Manufacturer</label>
-                          <input
-                            {...input}
-                            type="text"
-                            placeholder="Manufacture"
-                          />
-                          {meta.error && meta.touched && (
-                            <span>{meta.error}</span>
-                          )}
-                        </div>
-                      )}
-                    </Field>
-                    <Field
-                      name="price"
-                      validate={composeValidators(
-                        required,
-                        mustBeNumber,
-                        minValue(0)
-                      )}
-                    >
-                      {({ input, meta }) => (
-                        <div>
-                          <label>Price</label>
-                          <input {...input} type="text" placeholder="Price" />
-                          {meta.error && meta.touched && (
-                            <span>{meta.error}</span>
-                          )}
-                        </div>
-                      )}
-                    </Field>
-                    <Field name="country" validate={required}>
-                      {({ input, meta }) => (
-                        <div>
-                          <label>Country</label>
-                          <input {...input} type="text" placeholder="Country" />
-                          {meta.error && meta.touched && (
-                            <span>{meta.error}</span>
-                          )}
-                        </div>
-                      )}
-                    </Field>
-                    <div className="buttons">
-                      <button type="submit" disabled={submitting}>
-                        Submit
-                      </button>
-                        <button
-                          type="button"
-                          onClick={form.reset}
-                          disabled={submitting || pristine}
-                        >
-                          Reset
-                        </button>
+        <div className="modal-body">
+          <Final_Form
+            onSubmit={onSubmit}
+            initialValues={this.props.initialValues}
+            render={({ handleSubmit, form, submitting, pristine }) => (
+              <Form onSubmit={handleSubmit}>
+                <ControlLabel>Product Management</ControlLabel>
+                <Field name="id" validate={required}>
+                  {({ input, meta }) => (
+                    <div>
+                      <ControlLabel>ID</ControlLabel>
+                      <InputGroup style={styles.textbox}>
+                        <InputGroup.Addon>
+                          <Icon icon="id-info" />
+                        </InputGroup.Addon>
+                        <Input
+                          {...input}
+                          type="text"
+                          disabled={disableInputID}
+                          placeholder="ID"
+                        />
+                      </InputGroup>
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
                     </div>
-                  </form>
-                )}
-              />
-            </div>
-            <div className="modal-footer">
-              <h5>VNSolution</h5>
-            </div>
-          </div>
+                  )}
+                </Field>
+                <Field name="name" validate={required}>
+                  {({ input, meta }) => (
+                    <div>
+                      <ControlLabel>Name</ControlLabel>
+                      <InputGroup style={styles}>
+                        <InputGroup.Addon>
+                          <Icon icon="slack" />
+                        </InputGroup.Addon>
+                        <Input {...input} type="text" placeholder="Name" />
+                      </InputGroup>
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field name="manufacturer" validate={required}>
+                  {({ input, meta }) => (
+                    <div>
+                      <ControlLabel>Manufacturer</ControlLabel>
+                      <InputGroup style={styles}>
+                        <InputGroup.Addon>
+                          <Icon icon="home" />
+                        </InputGroup.Addon>
+                        <Input
+                          {...input}
+                          type="text"
+                          placeholder="Manufacture"
+                        />
+                      </InputGroup>
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field
+                  name="price"
+                  validate={composeValidators(
+                    required,
+                    mustBeNumber,
+                    minValue(0)
+                  )}
+                >
+                  {({ input, meta }) => (
+                    <div>
+                      <ControlLabel>Price</ControlLabel>
+                      <InputGroup style={styles}>
+                        <InputGroup.Addon>
+                          <Icon icon="usd" />
+                        </InputGroup.Addon>
+                        <Input {...input} type="text" placeholder="Price" />
+                      </InputGroup>
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field name="country" validate={required}>
+                  {({ input, meta }) => (
+                    <div>
+                      <ControlLabel>Country</ControlLabel>
+                      <InputGroup style={styles}>
+                        <InputGroup.Addon>
+                          <Icon icon="map-marker" />
+                        </InputGroup.Addon>
+                        <Input {...input} type="text" placeholder="Country" />
+                      </InputGroup>
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <div className="buttons">
+                  <Button type="submit" disabled={submitting}>
+                    Submit
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={form.reset}
+                    disabled={submitting || pristine}
+                  >
+                    Reset
+                  </Button>
+                </div>
+              </Form>
+            )}
+          />
         </div>
       </Styles>
     );

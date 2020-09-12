@@ -31,7 +31,7 @@ const btnDefault = css`
   ${btn("#ffffff", "#d5d5d5")} color: #555;
 `;
 
-const btnPrimary = btn("#4f93ce", "#285f8f");
+const btnPrimary = btn("#4f93ce", "#169de0");
 
 export default styled.div`
   body {
@@ -40,88 +40,6 @@ export default styled.div`
   }
   h1 {
     color: blue;
-  }
-  /* The Modal (background) */
-  .modal {
-    /*display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 3; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0, 0, 0); /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-  }
-
-  /* Modal Content */
-  .modal-content {
-    background-image: linear-gradient(-90deg, rgb(129, 129, 0), red);
-    position: relative;
-    background-color: #fefefe;
-    margin: auto;
-    padding: 0;
-    border: 1px solid #888;
-    width: 45%;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    -webkit-animation-name: animatetop;
-    -webkit-animation-duration: 0.4s;
-    animation-name: animatetop;
-    animation-duration: 0.4s;
-  }
-
-  /* Add Animation */
-  @-webkit-keyframes animatetop {
-    from {
-      top: -300px;
-      opacity: 0;
-    }
-    to {
-      top: 0;
-      opacity: 1;
-    }
-  }
-  /* test */
-
-  @keyframes animatetop {
-    from {
-      top: -300px;
-      opacity: 0;
-    }
-    to {
-      top: 0;
-      opacity: 1;
-    }
-  }
-
-  /* The Close Button */
-  .close {
-    color: white;
-    float: right;
-    font-size: 40px;
-    font-weight: bold;
-  }
-
-  .close:hover,
-  .close:focus {
-    color: red;
-    text-decoration: none;
-  }
-
-  .modal-header {
-    padding: 5px;
-    color: white;
-  }
-
-  .modal-body {
-    padding: 5px;
-  }
-
-  .modal-footer {
-    padding: 1px;
-    color: white;
   }
 
   font-family: sans-serif;
@@ -147,8 +65,10 @@ export default styled.div`
   }
 
   form {
-    max-width: 600px;
-    margin: 10px auto;
+    margin-left: 50px;
+    margin-top: 85px;
+    border: 1px solid blue;
+    max-width: 700px;
 
     padding: 20px;
     & > div {
@@ -157,7 +77,7 @@ export default styled.div`
       line-height: 2em;
       margin: 5px;
       & > label {
-        color: #fff;
+        color: #000;
         width: 110px;
         font-size: 1em;
         line-height: 32px;
@@ -198,6 +118,7 @@ export default styled.div`
       margin-top: 15px;
     }
     button {
+      width: 100px;
       margin: 0 10px;
       &[type="submit"] {
         ${btnPrimary};

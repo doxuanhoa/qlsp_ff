@@ -3,7 +3,7 @@ import Table from "./RenderTable";
 import Database from "./Database";
 import FormInput from "./FormInput";
 import "rsuite/dist/styles/rsuite-default.css";
-import { Button, Icon, Loader, Alert,ButtonToolbar,InputGroup, Input } from "rsuite";
+import { Alert } from "rsuite";
 
 export default class Manage extends Component {
   constructor(props) {
@@ -19,9 +19,8 @@ export default class Manage extends Component {
       },
       ArrayTemporary: [],
       keyWord: "",
-      showInputForm: false,
       disableInputID: false,
-      showHeaderTable: true,
+      textBtn: "Add",
     };
   }
 
@@ -29,21 +28,11 @@ export default class Manage extends Component {
     this.setState({ disableInputID });
   };
 
-  showInputForm = () => {
-    this.clearInput();
-    this.onChangeStatusInputId();
-    this.onChangeStatusForm(true);
-  };
-
-  onChangeStatusForm = (showInputForm = false) => {
-    this.setState({ showInputForm });
-  };
-
   clearInput = () => {
     this.setState({ Properties: {} });
   };
 
-  onChangeSearch = (e) => {
+  onChangeSearchField = (e) => {
     let search = this.state.ArrayProduct.filter((newArray) => {
       return (
         newArray.name.toUpperCase().includes(e.target.value.toUpperCase()) ||
@@ -54,6 +43,7 @@ export default class Manage extends Component {
       keyWord: e.target.value.toUpperCase(),
       ArrayTemporary: search,
     });
+    this.clearInput();
   };
 
   checkValidateId = (ProductAttribute) => {
@@ -73,14 +63,14 @@ export default class Manage extends Component {
       validate = false;
     }
     if (messenger) {
-      Alert.error(messenger, 1000);
+      Alert.error(messenger, 1500);
     }
     return validate;
   };
 
   handleDataSubmit = (obj) => {
-    let {index} = this;
-    let { ArrayProduct, ArrayTemporary, keyWord, disableInputID } = this.state;
+    let { index } = this;
+    let { ArrayProduct, ArrayTemporary, disableInputID } = this.state;
     if (!disableInputID) {
       if (!this.checkValidateId(obj)) {
         return;
@@ -88,14 +78,10 @@ export default class Manage extends Component {
         this.setState({
           ArrayProduct: [...this.state.ArrayProduct, obj],
         });
-        this.onChangeStatusForm();
       }
-      Alert.success("Success!", 1000);
     } else {
       if (ArrayTemporary.length === 0) {
-        let index1 = ArrayProduct.findIndex(
-          (s) => s.id === obj.id
-        );
+        let index1 = ArrayProduct.findIndex((s) => s.id === obj.id);
         ArrayProduct[index1] = obj;
       } else {
         let index2 = ArrayTemporary.findIndex(
@@ -104,103 +90,75 @@ export default class Manage extends Component {
         ArrayProduct[index] = obj;
         ArrayTemporary[index2] = obj;
       }
-      Alert.success("Success!", 1000);  
       this.setState({ ArrayProduct, ArrayTemporary });
-      this.onChangeStatusForm();
     }
+    this.onChangeStatusInputId(false);
+    this.clearInput();
+    Alert.success("Success!", 1500);
   };
 
   showFormEdit = (id) => {
     let { ArrayProduct, ArrayTemporary } = this.state;
-    this.showInputForm();
     this.onChangeStatusInputId(true);
     if (ArrayTemporary.length === 0) {
-      let index = ArrayProduct.findIndex(
-        (s) => s.id === id
-      );
+      let index = ArrayProduct.findIndex((s) => s.id === id);
       this.setState({
         Properties: ArrayProduct[index],
       });
     } else {
-      let index2 = ArrayProduct.findIndex(
-        (s) => s.id === id
-      );
+      let index2 = ArrayProduct.findIndex((s) => s.id === id);
       this.index = index2;
       this.setState({ Properties: ArrayProduct[index2] });
     }
   };
 
-    deleteData = (id) => {
+  deleteData = (id) => {
     let { ArrayProduct, ArrayTemporary } = this.state;
     if (ArrayTemporary.length === 0) {
-      let index = ArrayProduct.findIndex(
-        (s) => s.id === id
-      );
+      let index = ArrayProduct.findIndex((s) => s.id === id);
       ArrayProduct.splice(index, 1);
       this.setState({ ArrayProduct });
     } else {
-      let index = ArrayProduct.findIndex(
-        (s) => s.id === id
-      );
-      let index2 = ArrayTemporary.findIndex(
-        (s) => s.id === id
-      );
+      let index = ArrayProduct.findIndex((s) => s.id === id);
+      let index2 = ArrayTemporary.findIndex((s) => s.id === id);
       ArrayProduct.splice(index, 1);
       ArrayTemporary.splice(index2, 1);
       this.setState({ ArrayProduct, ArrayTemporary });
     }
-    Alert.success("Deleted!", 1000);
+    Alert.success("Deleted!", 1500);
+    this.clearInput();
   };
 
   render() {
-    const styles = {
-      width: 710,
-      marginBottom: 10
-    };
     let {
       ArrayProduct,
       ArrayTemporary,
       disableInputID,
       Properties,
+      keyWord,
     } = this.state;
-    let { showInputForm, keyWord } = this.state;
     return (
-      <div>
+      <div className="main">
+        <FormInput
+          onSubmitData={this.handleDataSubmit}
+          initialValues={Properties}
+          disableInputID={disableInputID}
+        />
         <div className="content">
-          {showInputForm && (
-            <FormInput
-              onSubmitData={this.handleDataSubmit}
-              initialValues={Properties}
-              hideInputForm={() => this.onChangeStatusForm()}
-              disableInputID={disableInputID}
-            />
-          )}
-          <h3>PRODUCT MANAGEMENT</h3>
-          <Button appearance="primary" onClick={this.showInputForm}>Add new product</Button>
           <div className="search">
-            {/* <input
-              onChange={this.onChangeSearch}
-              value={keyWord}
-              placeholder="Search by id or name..."
-            /> */}
-
-<InputGroup inside style={styles}>
-      <input
-              onChange={this.onChangeSearch}
+            <input
+              onChange={this.onChangeSearchField}
               value={keyWord}
               placeholder="Search by id or name..."
             />
-    </InputGroup>
           </div>
-          
-            <Table
-              ArrayProduct={ArrayProduct}
-              ArrayTemporary={ArrayTemporary}
-              showHeaderTable={this.state.showHeaderTable}
-              showFormEdit={this.showFormEdit}
-              deleteData={this.deleteData}
-              keyWord={keyWord}
-            />
+          <Table
+            ArrayProduct={ArrayProduct}
+            ArrayTemporary={ArrayTemporary}
+            showFormEdit={this.showFormEdit}
+            deleteData={this.deleteData}
+            keyWord={keyWord}
+          />
         </div>
       </div>
     );
