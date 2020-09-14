@@ -15,7 +15,11 @@ export default class InputElement extends Component {
           <Field name={this.props.name} validate={required}>
             {({ input, meta }) => (
               <div>
-                <Input {...input} type={this.props.type} />
+                <Input
+                  {...input}
+                  type={this.props.type}
+                  disabled={this.props.disabled}
+                />
                 {meta.error && meta.touched && <span>{meta.error}</span>}
               </div>
             )}

@@ -26,7 +26,12 @@ export default class FormInput extends Component {
             render={({ handleSubmit, form, submitting, pristine }) => (
               <Form onSubmit={handleSubmit}>
                 <ControlLabel>ID</ControlLabel>
-                <InputElement type="text" icon="edit" name="id" />
+                <InputElement
+                  type="text"
+                  icon="edit"
+                  name="id"
+                  disabled={disableInputID}
+                />
                 <ControlLabel>Name</ControlLabel>
                 <InputElement type="text" icon="slack" name="name" />
                 <ControlLabel>Company</ControlLabel>
