@@ -98,28 +98,21 @@ export default class Manage extends Component {
   };
 
   showFormEdit = (id) => {
-    let { ArrayProduct, ArrayTemporary } = this.state;
+    let { ArrayProduct } = this.state;
     this.onChangeStatusInputId(true);
-    if (ArrayTemporary.length === 0) {
-      let index = ArrayProduct.findIndex((s) => s.id === id);
-      this.setState({
-        Properties: ArrayProduct[index],
-      });
-    } else {
-      let index2 = ArrayProduct.findIndex((s) => s.id === id);
-      this.index = index2;
-      this.setState({ Properties: ArrayProduct[index2] });
-    }
+    let index = ArrayProduct.findIndex((s) => s.id === id);
+    this.setState({
+      Properties: ArrayProduct[index],
+    });
   };
 
   deleteData = (id) => {
     let { ArrayProduct, ArrayTemporary } = this.state;
+    let index = ArrayProduct.findIndex((s) => s.id === id);
     if (ArrayTemporary.length === 0) {
-      let index = ArrayProduct.findIndex((s) => s.id === id);
       ArrayProduct.splice(index, 1);
       this.setState({ ArrayProduct });
     } else {
-      let index = ArrayProduct.findIndex((s) => s.id === id);
       let index2 = ArrayTemporary.findIndex((s) => s.id === id);
       ArrayProduct.splice(index, 1);
       ArrayTemporary.splice(index2, 1);
