@@ -4,33 +4,28 @@ import Styles from "./Styles";
 import "rsuite/dist/styles/rsuite-default.css";
 import { ControlLabel, Button, Form } from "rsuite";
 import InputElement from "./InputElement";
+import { Link } from "react-router-dom";
 
 export default class FormInput extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
-    const { onSubmitData, disableInputID } = this.props;
-    const onSubmit = (obj, form) => {
-      onSubmitData(obj);
+    const isInputId = this.props.location.state.isInputId;
+    const onSubmit = (form) => {
       setTimeout(form.restart, 0);
     };
-
     return (
       <Styles>
         <div className="modal-body">
           <Final_Form
             onSubmit={onSubmit}
-            initialValues={this.props.initialValues}
-            render={({ handleSubmit, form, submitting, pristine }) => (
+            initialValues={this.props.location.state.rowIndex}
+            render={({ handleSubmit, form, submitting, pristine, values }) => (
               <Form onSubmit={handleSubmit}>
                 <ControlLabel>ID</ControlLabel>
                 <InputElement
                   type="text"
                   icon="edit"
                   name="id"
-                  disabled={disableInputID}
+                  disabled={isInputId}
                 />
                 <ControlLabel>Name</ControlLabel>
                 <InputElement type="text" icon="slack" name="name" />
@@ -41,8 +36,19 @@ export default class FormInput extends Component {
                 <ControlLabel>Country</ControlLabel>
                 <InputElement type="text" icon="map-marker" name="country" />
                 <div className="buttons">
-                  <Button type="submit" disabled={submitting}>
-                    {disableInputID ? "Update" : "Add"}
+                  <Button
+                    type="submit"
+                    disabled={submitting}
+                    componentClass={Link}
+                    to={{
+                      pathname: "/",
+                      state: {
+                        obj: values,
+                        isInputId: isInputId,
+                      },
+                    }}
+                  >
+                    {isInputId ? "Update" : "Add"}
                   </Button>
                   <Button
                     type="button"

@@ -10,8 +10,9 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-final-form": "^6.5.1",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
-    "rsuite": "^4.8.1",
+    "rsuite": "^4.8.2",
     "styled-components": "^5.2.0"
   },
   "scripts": {

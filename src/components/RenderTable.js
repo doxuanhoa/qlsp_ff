@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "rsuite/lib/styles/index.less";
 import "rsuite/dist/styles/rsuite-default.css";
 import { Icon, Button, Table } from "rsuite";
+import { Link } from "react-router-dom";
 
 const { Column, HeaderCell, Cell } = Table;
 const styles = {
@@ -23,7 +24,7 @@ class RenderTable extends Component {
   }
 
   render() {
-    let { showFormEdit, deleteData } = this.props;
+    let { deleteData } = this.props;
     const data = this.getData();
     return (
       <div>
@@ -56,8 +57,10 @@ class RenderTable extends Component {
                   <span>
                     <Button
                       style={styles.btn}
-                      onClick={() => {
-                        showFormEdit(rowIndex.id);
+                      componentClass={Link}
+                      to={{
+                        pathname: "/input",
+                        state: { rowIndex: rowIndex, isInputId: true },
                       }}
                     >
                       <Icon icon="edit2" />
